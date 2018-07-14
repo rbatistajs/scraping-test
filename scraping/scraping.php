@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../vendor/autoload.php';
 use Sunra\PhpSimple\HtmlDomParser;
 
 class ScrapingQuery
@@ -90,12 +90,17 @@ class ScrapingMap
         $this->fields[] = new ScrapingQuery($name, $query, $attr, $callback, true);
     }
 
-    function dataList($limit = 0)
+    function getDataList($limit = 0)
     {
         $result = array();
         foreach ($this->nodes as $node) {
             $obj = $this->processNode($node);
-            if($obj){
+
+            if($obj === false){
+                break;
+            }
+
+            if($obj !== null){
                 $result[] = $obj;
             }
 
@@ -108,7 +113,7 @@ class ScrapingMap
     }
 
 
-    function data()
+    function getData()
     {
         return $this->processNode($this->nodes[0]);
     }
@@ -131,18 +136,42 @@ class ScrapingMap
 
 class Scraping
 {
+    public $path = '';
+    public $baseUrl = '';
     private $dom = null;
 
-    function __construct($url)
+    function __construct($baseUrl, $path)
     {
-        $this->dom = HtmlDomParser::file_get_html($url);
+        $this->baseUrl = $baseUrl;
+        $this->path = $path;
+        $this->dom = HtmlDomParser::file_get_html( $this->baseUrl . $this->path );
     }
 
-    function map($str)
+    function map($query)
     {
         if($this->dom){
-            $nodes = $this->dom->find($str);
+            $nodes = $this->dom->find($query);
             return new ScrapingMap($nodes);
+        }
+
+        return null;
+    }
+
+    function find($query)
+    {
+        if($this->dom){
+            return $this->dom->find($query);
+        }
+
+        return null;
+    }
+
+    function findOne($query)
+    {
+        $nodes = $this->find($query);
+
+        if($nodes){
+            return $nodes[0];
         }
 
         return null;

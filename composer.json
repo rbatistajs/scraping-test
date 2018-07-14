@@ -1,6 +1,27 @@
 {
+    "name": "scraping/site",
+    "description": "scraping site",
+    "keywords": ["scraping", "site", "news"],
+    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robson Batista",
+            "email": "rbatistajs@gmail.com"
+        }
+    ],
     "require": {
-        "php": ">=5.3.2",
-        "sunra/php-simple-html-dom-parser": "1.5.2"
+        "php": ">=5.5.0",
+        "sunra/php-simple-html-dom-parser": "^1.5.2",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0"
+    },
+    "config": {
+        "process-timeout" : 0
+    },
+    "scripts": {
+        "start": "php -S localhost:8080 -t public",
+        "scraping-news": "php scraping/news.php",
+        "test": "phpunit"
     }
 }
