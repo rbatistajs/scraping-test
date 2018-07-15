@@ -52,6 +52,10 @@
                     $img->attr['src'] = $img->attr['data-echo'];
                 }
 
+                if($img->hasAttribute('height')){
+                    unset($img->attr['height']);
+                }
+
                 $img->attr['src'] = $this->getImageUrl($img->attr['src']);
             }
             return $node->innertext;
@@ -96,7 +100,7 @@
             global $pdo;
 
             // check if item exists
-            if($this->checkItem($obj->url)){
+            if($this->checkItem($this->baseUrl . $obj->url)){
                 return null;
             }
 
