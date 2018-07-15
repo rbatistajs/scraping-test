@@ -11,7 +11,7 @@
     class ScrapingNewsDetail extends Scraping
     {
         function run($obj){
-            print('Get content: ' . $obj->url . PHP_EOL);
+            print('Get content: ' . $this->path . PHP_EOL);
 
             // create map from element
             $map = $this->map('article');
@@ -26,17 +26,24 @@
             $map->set('imagefallback', 'img', 'src', [$this, 'formatImage']);
 
             // Set content to map and format
-            $map->set('content', '.field-name-body [itemprop=description]', null, [$this, 'formatContent']);
+            $map->set('content', '.content', null, [$this, 'formatContent']);
 
             // Merge objects
             return (object) array_merge((array) $obj, (array) $map->getData());
         }
 
-        function formatImage($image, $node){
+        function getImageUrl($url){
+            if(substr($url, 0, 1) === '/'){
+                $url = $this->baseUrl . $url;
+            }
+            return $url;
+        }
+
+        function formatImage($url, $node){
             if($node->hasAttribute('data-echo')){
                 return $node->attr['data-echo'];
             }
-            return $image;
+            return $this->getImageUrl($url);
         }
 
         function formatContent($content, $node){
@@ -44,6 +51,8 @@
                 if($img->hasAttribute('data-echo')){
                     $img->attr['src'] = $img->attr['data-echo'];
                 }
+
+                $img->attr['src'] = $this->getImageUrl($img->attr['src']);
             }
             return $node->innertext;
         }
@@ -110,8 +119,8 @@
             $stmt->execute(array(
                 ':title' => $obj->title,
                 ':subtitle' => $obj->subtitle,
-                ':author' => str_replace('by ', '', $obj->author),
-                ':date' =>  date('Y-m-d', strtotime($obj->date)),
+                ':author' => $obj->author ? str_replace('by ', '', $obj->author) : null,
+                ':date' =>  $obj->date ? date('Y-m-d', strtotime($obj->date)) : null,
                 ':url' => $this->baseUrl . $obj->url,
                 ':slug' => $slug,
                 ':image' => $obj->image ? $obj->image : $obj->imagefallback,

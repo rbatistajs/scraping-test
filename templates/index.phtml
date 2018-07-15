@@ -8,26 +8,6 @@
 
     </head>
     <body>
-
-        <section id="news">
-            <h1 class="Title">News</h1>
-            <div class="items">
-            <?php foreach ($news as $item) { ?>
-                <div class="item">
-                    <div class="item-image">
-                        <a href="/<?php echo $item['slug']; ?>">
-                            <img src="<?php echo $item['image']; ?>">
-                        </a>
-                    </div>
-                    <div class="item-title">
-                        <a href="/<?php echo $item['slug']; ?>">
-                            <?php echo $item['title']; ?>
-                        </a>
-                    </div>
-                </div>
-            <?php } ?>
-            </div>
-        </section>
-
+        <?php include($view); ?>
     </body>
 </html>

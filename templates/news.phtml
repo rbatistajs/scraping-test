@@ -1,0 +1,30 @@
+
+<section id="news">
+    <h1 class="title">News</h1>
+    <div class="items">
+    <?php foreach ($news as $item) { ?>
+        <div class="item">
+            <div class="item-image">
+                <a href="/<?php echo $item['slug']; ?>">
+                    <img src="<?php echo $item['image']; ?>">
+                </a>
+            </div>
+
+            <h4 class="item-title">
+                <a href="/<?php echo $item['slug']; ?>">
+                    <?php echo $item['title']; ?>
+                </a>
+            </h4>
+
+            <div class="item-footer">
+                <?php if($item['author']){ ?>
+                    <span><?php echo $item['author']; ?> - </span>
+                <?php } ?>
+                <?php if($item['date']){ ?>
+                    <span><?php echo date('M d, Y', strtotime($item['date'])); ?></span>
+                <?php } ?>                
+            </div>
+        </div>
+    <?php } ?>
+    </div>
+</section>
